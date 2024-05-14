@@ -1,69 +1,44 @@
- let board = [
-    ['-','-','-'],
-    ['-','-','-'],
-    ['-','-','-']
-]
+const container = document.querySelector(".container");
+const cells = document.querySelectorAll(".cells");
 
-function player(name1){
+const playGame = (function() {
+    let currentPlayer = "sandeep";
 
-    const playerName = name1
-
-    const rowPrompt = ()=>{
-        let row
-        do{row = prompt(`${name1} choose your row`)}
-        while (row<0 || row>3)
-        console.log(row)
-        return row
+    function switchPlayer() {
+        currentPlayer = currentPlayer === "sandeep" ? "harman" : "sandeep";
     }
-    const colPrompt= ()=>{
-        let column
-        do{column = prompt(`${name1} choose your column`)}
-        while (column<0 || column>3)
-        return column
-    }
-    const playerMove = function(row,column){
-        console.log(row)
-        if(board[row-1][column-1]  == '-'){
-            if(playerName=="sandeep"){
-                board[row-1][column-1]  = "X"
+
+    function buttonClick(callback) {
+        container.addEventListener('click', function(event) {
+            if (event.target.classList.contains('cells')) {
+                var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
+                console.log("Element " + (clickedIndex + 1) + " clicked");
+                callback(clickedIndex);
             }
-            else{
-                board[row-1][column-1]  = "O"
+        });
+    }
+    const arr1 = []
+    const arr2 = []
 
-            }
-            return board
-        }
-        return "error"
-    }         
-    return{rowPrompt, colPrompt, playerMove}
+    function player(name) {
+        const playerName = name;
+        const playerMove = function(index) {
+            console.log(playerName);
+            cells[index].style.backgroundColor = playerName === "sandeep" ? "blue" : "green";
+            playerName === 'sandeep' ? arr1.push(index) : arr2.push(index)
+            console.log(arr1)
+            console.log(arr2)
+        };
+        return playerMove;
     }
 
-function playGame(){
-    do{
-        const player1 = player("sandeep")
-        const row1 = player1.rowPrompt()
-        const col1 = player1.colPrompt()
-        console.log(player1.playerMove(row1, col1))
-        const player2= player("harman")
-        const row2 = player2.rowPrompt()
-        const col2 = player2.colPrompt()
-        console.log(player2.playerMove(row2,col2))
-    }
-    while(checkWinner()==false)
+    return function() {
+        buttonClick(function(index) {
+            const currentPlayerMove = player(currentPlayer);
+            currentPlayerMove(index);
+            switchPlayer();
+        });
+    };
+})();
 
-    return `winner is player 1`
-    
-    
-}
-function checkWinner(){
-    if(
-        board[0][0]=='X' && board[0][1]=='X' && board[0][2] == 'X'
-    ){
-        return true
-    }
-
-    return false
-}
-
-
-console.log(playGame())
+playGame();
