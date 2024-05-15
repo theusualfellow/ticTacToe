@@ -31,12 +31,40 @@ const playGame = (function() {
         };
         return playerMove;
     }
+    function checkWinner(arr1, arr2){
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+            
+        ];
+
+    
+        // Check if any of the winning combinations are present in arr1
+        for (const combination of winningCombinations) {
+            if (combination.every(index => arr1.includes(index))) {
+                return `sandeep won`;
+            }
+            if(combination.every(index =>arr2.includes(index))){
+                return `harman won`
+            }
+
+        }
+        return `no winner`
+
+    }
 
     return function() {
         buttonClick(function(index) {
             const currentPlayerMove = player(currentPlayer);
             currentPlayerMove(index);
             switchPlayer();
+            console.log(checkWinner(arr1, arr2))
         });
     };
 })();
