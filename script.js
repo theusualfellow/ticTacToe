@@ -1,6 +1,7 @@
 const container = document.querySelector(".container");
 const cells = document.querySelectorAll(".cells");
 const winner = document.querySelector(".winner")
+const restartGame = document.createElement("button")
 
 const playGame = (function() {
     let currentPlayer = "sandeep";
@@ -8,20 +9,19 @@ const playGame = (function() {
     function switchPlayer() {
         currentPlayer = currentPlayer === "sandeep" ? "harman" : "sandeep";
     }
+    const usedButtons = []
 
     function buttonClick(callback) {
         container.addEventListener('click', function(event) {
             if (event.target.classList.contains('cells')) {
                 var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
-                const usedButtons = []
                 usedButtons.push(clickedIndex)
                 console.log(usedButtons)
-                
+
                 console.log("Element " + (clickedIndex + 1) + " clicked");
-                callback(clickedIndex);
-                if(usedButtons.includes(clickedIndex)){
-                    return
-                }
+
+                callback(clickedIndex);   
+                
             }
         });
     }
@@ -62,17 +62,19 @@ const playGame = (function() {
 
             //check if they're available in arr2
             if(combination.every(index =>arr2.includes(index))){
-                return `harman won`
+                return `harman`
             }
             //check for tie
             if(arr1.length==5 && arr2.length==4 &&combination.every(index => arr1.includes(index))==false){
-                return `it's a tie`
+                return `tie`
             }
         }
         return `no winner`
 
     }
+    restartGame.innerText="restart game"
 
+   
     return function() {
         buttonClick(function(index) {
             const currentPlayerMove = player(currentPlayer);
@@ -80,6 +82,16 @@ const playGame = (function() {
             switchPlayer();
             if(checkWinner(arr1, arr2)=='sandeep'){
                 winner.innerText = "sandeep won"
+                winner.appendChild(restartGame)
+            }
+            if(checkWinner(arr1, arr2)=='harman'){
+                winner.innerText='harman won'
+                winner.appendChild(restartGame)
+            }
+            if(checkWinner(arr1,arr2)=='tie'){
+                winner.innerText=`it's a tie`
+                winner.appendChild(restartGame)
+
             }
         });
     };
