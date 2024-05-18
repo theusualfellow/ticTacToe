@@ -1,17 +1,21 @@
-
-
-.cells{
-    height: 100px;
-    width: 100px;
-    margin: 10px;
-    background-color: red;
+body{
+    display: flex;
+    justify-content: center;
 }
 .container{
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto
-}
-.row1, .row2, .row3{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    height: 300px;
+    width: 300px;
+    justify-content: center;
     gap: 10px;
+}
+.cells{
+    background-color: red;
+}
+h1{
+    text-align: center;
+    grid-area: 4/ 1/ 5/ 4;
+
 }
