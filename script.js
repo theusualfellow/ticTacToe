@@ -4,24 +4,28 @@ const winner = document.querySelector(".winner")
 const restartGame = document.createElement("button")
 
 const playGame = (function() {
-    let currentPlayer = "sandeep";
+    let gameOver= false
+
+  
+    let currentPlayer = "Player1";
 
     function switchPlayer() {
-        currentPlayer = currentPlayer === "sandeep" ? "harman" : "sandeep";
+        currentPlayer = currentPlayer === "Player1" ? "Player2" : "Player1";
     }
-    const usedButtons = []
 
     function buttonClick(callback) {
+        
         container.addEventListener('click', function(event) {
-            if (event.target.classList.contains('cells')) {
-                var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
-                usedButtons.push(clickedIndex)
-                console.log(usedButtons)
+            //button is not clicked if someone won the game
+            if(gameOver) return
 
+            //if not then do this:
+            if (event.target.classList.contains('cells')&& !event.target.dataset.clicked) {
+                var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
                 console.log("Element " + (clickedIndex + 1) + " clicked");
 
                 callback(clickedIndex);   
-                
+                event.target.dataset.clicked = true;
             }
         });
     }
@@ -32,8 +36,8 @@ const playGame = (function() {
         const playerName = name;
         const playerMove = function(index) {
             console.log(playerName);
-            cells[index].style.backgroundColor = playerName === "sandeep" ? "blue" : "green";
-            playerName === 'sandeep' ? arr1.push(index) : arr2.push(index)
+            cells[index].style.backgroundColor = playerName === "Player1" ? "blue" : "green";
+            playerName === 'Player1' ? arr1.push(index) : arr2.push(index)
             console.log(arr1)
             console.log(arr2)
         };
@@ -57,40 +61,60 @@ const playGame = (function() {
             // Check if any of the winning combinations are present in arr1
 
             if (combination.every(index => arr1.includes(index))) {
-                return `sandeep`;
+                return `Player1`;
             }
 
             //check if they're available in arr2
             if(combination.every(index =>arr2.includes(index))){
-                return `harman`
+                return `Player2`
             }
             //check for tie
             if(arr1.length==5 && arr2.length==4 &&combination.every(index => arr1.includes(index))==false){
                 return `tie`
             }
         }
-        return `no winner`
+        return
 
     }
     restartGame.innerText="restart game"
 
-   
+    restartGame.addEventListener("click", ()=> {
+            // Reset game state
+            gameOver = false;
+            currentPlayer = "Player1";
+            arr1.length = 0;
+            arr2.length = 0;    
+            // Reset the cells
+            cells.forEach(cell => {
+                cell.style.backgroundColor = "";
+                delete cell.dataset.clicked;
+            });
+    
+            // Clear the winner message
+            winner.innerText = "";
+            winner.removeChild(restartGame);
+        }
+    
+)
     return function() {
         buttonClick(function(index) {
             const currentPlayerMove = player(currentPlayer);
             currentPlayerMove(index);
             switchPlayer();
-            if(checkWinner(arr1, arr2)=='sandeep'){
-                winner.innerText = "sandeep won"
+            if(checkWinner(arr1, arr2)=='Player1'){
+                winner.innerText = "Player1 won"
                 winner.appendChild(restartGame)
+                gameOver=true
             }
-            if(checkWinner(arr1, arr2)=='harman'){
-                winner.innerText='harman won'
+            if(checkWinner(arr1, arr2)=='Player2'){
+                winner.innerText='Player2 won'
                 winner.appendChild(restartGame)
+                gameOver=true
             }
             if(checkWinner(arr1,arr2)=='tie'){
                 winner.innerText=`it's a tie`
                 winner.appendChild(restartGame)
+                gameOver=true
 
             }
         });
