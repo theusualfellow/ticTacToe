@@ -5,8 +5,6 @@ const restartGame = document.createElement("button")
 
 const playGame = (function() {
     let gameOver= false
-
-  
     let currentPlayer = "Player1";
 
     function switchPlayer() {
@@ -20,15 +18,18 @@ const playGame = (function() {
             if(gameOver) return
 
             //if not then do this:
+            //make sure the div is not already clicked by checking datatset
             if (event.target.classList.contains('cells')&& !event.target.dataset.clicked) {
                 var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
                 console.log("Element " + (clickedIndex + 1) + " clicked");
 
                 callback(clickedIndex);   
+                //once clicked turn dataset true for that particular div
                 event.target.dataset.clicked = true;
             }
         });
     }
+    //arrays to keep track of div clicked by players
     const arr1 = []
     const arr2 = []
 
@@ -38,8 +39,6 @@ const playGame = (function() {
             console.log(playerName);
             cells[index].style.backgroundColor = playerName === "Player1" ? "blue" : "green";
             playerName === 'Player1' ? arr1.push(index) : arr2.push(index)
-            console.log(arr1)
-            console.log(arr2)
         };
         return playerMove;
     }
