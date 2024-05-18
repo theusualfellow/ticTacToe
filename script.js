@@ -1,5 +1,6 @@
 const container = document.querySelector(".container");
 const cells = document.querySelectorAll(".cells");
+const winner = document.querySelector(".winner")
 
 const playGame = (function() {
     let currentPlayer = "sandeep";
@@ -12,8 +13,15 @@ const playGame = (function() {
         container.addEventListener('click', function(event) {
             if (event.target.classList.contains('cells')) {
                 var clickedIndex = Array.from(event.target.parentNode.children).indexOf(event.target);
+                const usedButtons = []
+                usedButtons.push(clickedIndex)
+                console.log(usedButtons)
+                
                 console.log("Element " + (clickedIndex + 1) + " clicked");
                 callback(clickedIndex);
+                if(usedButtons.includes(clickedIndex)){
+                    return
+                }
             }
         });
     }
@@ -43,17 +51,23 @@ const playGame = (function() {
             [2, 4, 6]
             
         ];
-
     
-        // Check if any of the winning combinations are present in arr1
         for (const combination of winningCombinations) {
+            
+            // Check if any of the winning combinations are present in arr1
+
             if (combination.every(index => arr1.includes(index))) {
-                return `sandeep won`;
+                return `sandeep`;
             }
+
+            //check if they're available in arr2
             if(combination.every(index =>arr2.includes(index))){
                 return `harman won`
             }
-
+            //check for tie
+            if(arr1.length==5 && arr2.length==4 &&combination.every(index => arr1.includes(index))==false){
+                return `it's a tie`
+            }
         }
         return `no winner`
 
@@ -64,7 +78,9 @@ const playGame = (function() {
             const currentPlayerMove = player(currentPlayer);
             currentPlayerMove(index);
             switchPlayer();
-            console.log(checkWinner(arr1, arr2))
+            if(checkWinner(arr1, arr2)=='sandeep'){
+                winner.innerText = "sandeep won"
+            }
         });
     };
 })();
