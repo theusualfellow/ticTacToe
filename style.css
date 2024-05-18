@@ -12,10 +12,12 @@ body{
     gap: 10px;
 }
 .cells{
-    background-color: red;
+    background-color: rgb(58, 50, 50);
 }
 h1{
     text-align: center;
+    display: flex;
+    flex-direction: column;
     grid-area: 4/ 1/ 5/ 4;
 
 }
